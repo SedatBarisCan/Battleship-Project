@@ -1,12 +1,3 @@
-/*
-Improvements
-
-make ship placement better so it shouldnt palce near ship 
-
-*/
-
-
-
 import './style.css';
 import Ship from './ship';
 import GameBoard from './gameBoard';

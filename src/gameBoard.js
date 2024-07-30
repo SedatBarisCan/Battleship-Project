@@ -22,9 +22,25 @@ export default function GameBoard () {
                         console.warn('Warning: Placement overlaps. No modifications made.');
                         return;
                     }
-                    //this variables check placement is valid
-                    //let isValid = this.board[x+1][i]&&this.board[x][i+1]&&this.board[x+1][i+1]&&this.board[x+1][i]&&this.board[x][i-1]&&this.board[x-1][i]&&this.board[x-1][i-1]
 
+                    const surroundingCoords = [
+                        [x - 1, i - 1], [x, i - 1], [x + 1, i - 1], // top
+                        [x + 1, i - 1], [x + 1, i], [x + 1, i + 1], // bottom
+                        [x - 1, i], [x + 1, i] // sides
+                    ];
+
+                    //filters out of bound coords because for loop cant do that
+                    const validCoords = surroundingCoords.filter(([x, i]) => {
+                        return x >= 0 && x < 10 && i >= 0 && i < 10;
+                    });
+            
+                    for (const [x, i] of validCoords) {
+                        if (this.board[x][i] !==0 && this.board[x][i] !== undefined) {
+                            console.warn('Warning: You cant Place near a ship. No modifications made.');
+                            return;
+                        }
+                        
+                    }
     
                 }
 
@@ -47,6 +63,25 @@ export default function GameBoard () {
                     if( this.board[i][y] !== 0 ) {
                         console.warn('Warning: Placement overlaps. No modifications made.');
                         return;
+                    }
+
+                    const surroundingCoords = [
+                        [i - 1, i - 1], [i, y - 1], [i + 1, y - 1], // top
+                        [i + 1, i - 1], [i + 1, y], [i + 1, y + 1], // bottom
+                        [i - 1, i], [i + 1, y] // sides
+                    ];
+
+                    //filters out of bound coords because for loop cant do that
+                    const validCoords = surroundingCoords.filter(([i, y]) => {
+                        return x >= 0 && x < 10 && i >= 0 && i < 10;
+                    });
+            
+                    for (const [i, y] of validCoords) {
+                        if (this.board[i][y] !==0 && this.board[i][y] !== undefined) {
+                            console.warn('Warning: You cant Place near a ship. No modifications made.');
+                            return;
+                        }
+                        
                     }
     
                 }

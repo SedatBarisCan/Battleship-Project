@@ -137,26 +137,62 @@ function gameController () {
                 }
             
             function canPlaceShip (coords, direction, length, board) {
+                const [x, y] = coords;
+
                 if ( direction === "horizontal" ) {
-                    if ( coords[1] + length > 10 ) return false;
+                    if ( y + length > 10 ) return false;
             
-                    for (let i = coords[1]; i < coords[1] + length; i++) {
-                        if( board[coords[0]][i] !== 0 ) return false;
+                    for (let i = y; i < y + length; i++) {
+                        if( board[x][i] !== 0 ) return false;
+
+                        const surroundingCoords = [
+                            [x - 1, i - 1], [x, i - 1], [x + 1, i - 1], // top
+                            [x + 1, i - 1], [x + 1, i], [x + 1, i + 1], // bottom
+                            [x - 1, i], [x + 1, i] // sides
+                        ];
+                        //filters out of bound coords because for loop cant do that
+                        const validCoords = surroundingCoords.filter(([x, i]) => {
+                            return x >= 0 && x < 10 && i >= 0 && i < 10;
+                        });
+                
+                        for (const [x, i] of validCoords) {
+                            if (board[x][i] !== undefined && board[x][i] !==0) return false;
+
+                        }
                     }
+
+                    return true;
                 } else {
-                    if ( coords[0] + length > 10 ) return false;
+                    if ( x + length > 10 ) return false;
             
-                    for (let i = coords[0]; i < coords[0] + length; i++) {
-                        if( board[i][coords[1]] !== 0 ) return false;
-            
+                    for (let i = x; i < x + length; i++) {
+                        if( board[i][y] !== 0 ) return false;
+
+                        const surroundingCoords = [
+                            [i - 1, i - 1], [i, y - 1], [i + 1, y - 1], // top
+                            [i + 1, i - 1], [i + 1, y], [i + 1, y + 1], // bottom
+                            [i - 1, i], [i + 1, y] // sides
+                        ];
+
+                        //filters out of bound coords because for loop cant do that
+                        const validCoords = surroundingCoords.filter(([i, y]) => {
+                            return x >= 0 && x < 10 && i >= 0 && i < 10;
+                        });
+                
+                        for (const [i, y] of validCoords) {
+                            if (board[i][y] !== undefined && board[i][y] !==0) return false;
+                            
+                        }
                     }
+                    return true;
                 }
-                return true;
             }
-            
-            function getRandomInt(max) {
-                return Math.floor(Math.random() * max);
-            }
+
+                
+
+                function getRandomInt(max) {
+                    return Math.floor(Math.random() * max);
+                }
             
         },
         isGameOver: function (enemy) {
@@ -202,9 +238,8 @@ function gameController () {
             }
         },
 
-    }
+      }
 }
-
 
 
 
