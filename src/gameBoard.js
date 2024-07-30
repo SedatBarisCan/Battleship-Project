@@ -5,71 +5,85 @@ export default function GameBoard () {
         ships: [],
 
         placeShip: function (coords, direction = "horizontal", ship) {
+            const [x, y] = coords;
 
             //this section checks if placement is valid
-            if (coords[1] + ship.length > 10 || coords[0] + ship.length > 10 ) {
-                console.warn('Warning: Placement goes out of bounds. No modifications made.');
-                return;
-            }
 
-            for (let i = coords[1]; i < coords[1] + ship.length; i++) {
-                if( this.board[coords[0]][i] !== 0 ) {
-                    console.warn('Warning: Placement overlaps. No modifications made.');
-                    return;
-                }
-
-            }
-
-            for (let i = coords[0]; i < coords[0] + ship.length; i++) {
-                if( this.board[i][coords[1]] !== 0 ) {
-                    console.warn('Warning: Placement overlaps. No modifications made.');
-                    return;
-                }
-
-            }
-
-            // this section implements ship to gameboard
             if ( direction === "horizontal" ) {
-                for (let i = coords[1]; i < coords[1] + ship.length; i++) {
-                    this.board[coords[0]][i] = ship;
+                
+
+                if ( y + ship.length > 10 ) {
+                    console.warn('Warning: Placement goes out of bounds. No modifications made.');
+                    return;
+                }
+
+                for (let i = y; i < y + ship.length; i++) {
+                    if( this.board[x][i] !== 0 ) {
+                        console.warn('Warning: Placement overlaps. No modifications made.');
+                        return;
+                    }
+                    //this variables check placement is valid
+                    //let isValid = this.board[x+1][i]&&this.board[x][i+1]&&this.board[x+1][i+1]&&this.board[x+1][i]&&this.board[x][i-1]&&this.board[x-1][i]&&this.board[x-1][i-1]
+
+    
+                }
+
+                // this section implements ship to gameboard
+                for (let i = y; i < y + ship.length; i++) {
+                    this.board[x][i] = ship;
                 }
                 this.ships.push(ship);
+
+
             }
 
             if ( direction === "vertical" ) {
-                for (let i = coords[0]; i < coords[0] + ship.length; i++) {
-                    this.board[i][coords[1]] = ship;
+                if ( x + ship.length > 10 ) {
+                    console.warn('Warning: Placement goes out of bounds. No modifications made.');
+                    return;
+                }
+
+                for (let i = x; i < x + ship.length; i++) {
+                    if( this.board[i][y] !== 0 ) {
+                        console.warn('Warning: Placement overlaps. No modifications made.');
+                        return;
+                    }
+    
+                }
+
+                // this section implements ship to gameboard
+                for (let i = x; i < x + ship.length; i++) {
+                    this.board[i][y] = ship;
                 }
                 this.ships.push(ship);
+
             }
         },
-        receiveAttack: function (coords, callback) {//use callback function to render on each hit
+        receiveAttack: function (coords) {//use callback function to render on each hit
             let target = this.board[coords[0]][coords[1]];
             
             if ( target === undefined ) {
                 console.warn('Coordinates out of bounds');
                 return;
             }
-            if (target && target !==0 && target !=="miss") {
+            if (target && target !==0 && target !=="miss" && target !== "hit") {
                 target.hit();
                 target.isSunk();
                 
                 this.isGameOver();
 
-                callback();
                 this.board[coords[0]][coords[1]] = "hit";
                 if (target.sunk) {
                     console.log(`${target.name} has sunk!`)
                 }
                 
             } else if ( target === 0 ) {
-                callback();
                 this.board[coords[0]][coords[1]] = "miss";
             }
         },
         isGameOver: function () {
             return this.ships.every(ship => ship.sunk);
-        }
+        },
 
     }
 }

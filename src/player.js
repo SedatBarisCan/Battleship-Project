@@ -1,5 +1,10 @@
-export default function Player () {
+import GameBoard from './gameBoard';
+
+
+export default function Player (name, boardNumber) {
     return {
-        gameBoard: GameBoard()
+        gameBoard: GameBoard(),
+        name: name,
+        boardNumber: boardNumber
     }
 }
